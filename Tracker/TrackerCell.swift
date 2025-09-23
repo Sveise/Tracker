@@ -46,12 +46,12 @@ final class TrackerCell: UICollectionViewCell {
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.numberOfLines = 2
-        nameLabel.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        nameLabel.font = UIFont(name: "SFPro-Medium", size: 12) ?? UIFont.systemFont(ofSize: 11, weight: .medium)
         nameLabel.textColor = .white
         containerView.addSubview(nameLabel)
         
         daysLabel.translatesAutoresizingMaskIntoConstraints = false
-        daysLabel.font = UIFont.systemFont(ofSize: 12)
+        daysLabel.font = UIFont(name: "SFPro-Medium", size: 12) ?? UIFont.systemFont(ofSize: 11, weight: .medium)
         daysLabel.textColor = UIColor(named: "blackDay")
         contentView.addSubview(daysLabel)
         
@@ -79,7 +79,7 @@ final class TrackerCell: UICollectionViewCell {
             nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
             
             // daysLabel
-            daysLabel.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 16),
+            daysLabel.centerYAnchor.constraint(equalTo: completionButton.centerYAnchor),
             daysLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 12),
             
             // completionButton

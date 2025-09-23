@@ -82,6 +82,7 @@ final class ScheduleViewController: UIViewController {
     
     private func setupDoneButton() {
         doneButton.setTitle("Готово", for: .normal)
+        doneButton.titleLabel?.font = UIFont(name: "SFPro-Regular", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .regular)
         doneButton.setTitleColor(.white, for: .normal)
         doneButton.backgroundColor = UIColor.black
         doneButton.layer.cornerRadius = 16
