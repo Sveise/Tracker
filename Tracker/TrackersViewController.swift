@@ -106,13 +106,13 @@ final class TrackersViewController: UIViewController {
         searchView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchView)
         
-        searchIcon.tintColor = UIColor(named: "gray")
+        searchIcon.tintColor = UIColor(.yPgray)
         searchIcon.image = UIImage(systemName: "magnifyingglass")
         searchIcon.translatesAutoresizingMaskIntoConstraints = false
         searchView.addSubview(searchIcon)
         
         searchTextField.placeholder = "Поиск"
-        searchTextField.textColor = UIColor(named: "gray")
+        searchTextField.textColor = UIColor(named: "YPgray")
         searchTextField.font = UIFont(name: "SFPro-Regular", size: 17) ?? .systemFont(ofSize: 17)
         searchTextField.translatesAutoresizingMaskIntoConstraints = false
         searchTextField.addTarget(self, action: #selector(searchTextChanged), for: .editingChanged)
@@ -243,9 +243,7 @@ final class TrackersViewController: UIViewController {
     
     private func isTrackerActive(_ tracker: Tracker, on date: Date) -> Bool {
         guard !tracker.schedule.isEmpty else { return true }
-        let weekday = Calendar.current.component(.weekday, from: date)
-    
-        return tracker.schedule.contains((weekday + 5) % 7)
+        return tracker.schedule.contains(WeekDay.from(date: date))
     }
     
     private func displayedTrackers(for category: TrackerCategory) -> [Tracker] {

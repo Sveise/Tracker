@@ -12,16 +12,14 @@ struct Tracker: Codable {
     let name: String
     let color: String
     let emoji: String
-    let schedule: [Int]
+    let schedule: [WeekDay]
     
-    
-    init(name: String, color: String, emoji: String, schedule: [Int]) {
+    init(name: String, color: String, emoji: String, schedule: [WeekDay]) {
         self.id = UUID()
         self.name = name
         self.color = color
         self.emoji = emoji
         self.schedule = schedule
-        
     }
 }
 
@@ -45,12 +43,30 @@ struct TrackerRecord: Codable {
     }
 }
 
-enum WeekDay: String, CaseIterable, Hashable {
-    case monday = "Понедельник"
-    case tuesday = "Вторник"
-    case wednesday = "Среда"
-    case thursday = "Четверг"
-    case friday = "Пятница"
-    case saturday = "Суббота"
-    case sunday = "Воскресенье"
+enum WeekDay: Int, CaseIterable, Codable {
+    case monday = 1
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
+    
+    var title: String {
+        switch self {
+        case .monday: return "Понедельник"
+        case .tuesday: return "Вторник"
+        case .wednesday: return "Среда"
+        case .thursday: return "Четверг"
+        case .friday: return "Пятница"
+        case .saturday: return "Суббота"
+        case .sunday: return "Воскресенье"
+        }
+    }
+    
+    static func from(date: Date) -> WeekDay {
+        let systemWeekday = Calendar.current.component(.weekday, from: date)
+        let normalized = (systemWeekday == 1) ? 7 : systemWeekday - 1
+        return WeekDay(rawValue: normalized)!
+    }
 }

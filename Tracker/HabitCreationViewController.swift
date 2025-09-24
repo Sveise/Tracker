@@ -63,14 +63,14 @@ final class HabitCreationViewController: UIViewController {
             createButton.backgroundColor = UIColor(named: "blackDay")
             createButton.isEnabled = true
         } else {
-            createButton.backgroundColor = UIColor(named: "gray")
+            createButton.backgroundColor = UIColor(.yPgray)
             createButton.isEnabled = false
         }
     }
     
     private func formatSelectedDays(_ days: [WeekDay]) -> String {
         guard !days.isEmpty else { return "" }
-        let sortedDays = days.sorted { $0.index < $1.index }
+        let sortedDays = days.sorted { $0.rawValue < $1.rawValue }
         let dayAbbreviations = sortedDays.map { day -> String in
             switch day {
             case .monday: return "Пн"
@@ -112,7 +112,7 @@ final class HabitCreationViewController: UIViewController {
         nameTextField.heightAnchor.constraint(equalToConstant: 75).isActive = true
         
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
-        errorLabel.textColor = UIColor(named: "red")
+        errorLabel.textColor = UIColor(.yPred)
         errorLabel.font = UIFont(name: "SFPro-Regular", size: 17) ?? .systemFont(ofSize: 17)
         errorLabel.text = "Ограничение 38 символов"
         errorLabel.textAlignment = .center
@@ -140,11 +140,11 @@ final class HabitCreationViewController: UIViewController {
         
         categoryImageView.translatesAutoresizingMaskIntoConstraints = false
         categoryImageView.image = UIImage(named: "сhevron")
-        categoryImageView.tintColor = UIColor(named: "gray")
+        categoryImageView.tintColor = UIColor(.yPgray)
         categoryContainerView.addSubview(categoryImageView)
         
         lineView.translatesAutoresizingMaskIntoConstraints = false
-        lineView.backgroundColor = UIColor(named: "gray")
+        lineView.backgroundColor = UIColor(.yPgray)
         categoryContainerView.addSubview(lineView)
         
         scheduleTitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -155,13 +155,13 @@ final class HabitCreationViewController: UIViewController {
         
         scheduleValueLabel.translatesAutoresizingMaskIntoConstraints = false
         scheduleValueLabel.font = UIFont(name: "SFPro-Regular", size: 17) ?? .systemFont(ofSize: 17)
-        scheduleValueLabel.textColor = UIColor(named: "gray")
+        scheduleValueLabel.textColor = UIColor(.yPgray)
         scheduleValueLabel.text = formatSelectedDays(selectedDays)
         categoryContainerView.addSubview(scheduleValueLabel)
         
         scheduleImageView.translatesAutoresizingMaskIntoConstraints = false
         scheduleImageView.image = UIImage(named: "сhevron")
-        scheduleImageView.tintColor = UIColor(named: "gray")
+        scheduleImageView.tintColor = UIColor(.yPgray)
         categoryContainerView.addSubview(scheduleImageView)
         
         scheduleTapArea.translatesAutoresizingMaskIntoConstraints = false
@@ -173,12 +173,12 @@ final class HabitCreationViewController: UIViewController {
         cancelButton.setTitle("Отменить", for: .normal)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
-        cancelButton.tintColor = UIColor(named: "red")
+        cancelButton.tintColor = UIColor(.yPred)
         cancelButton.widthAnchor.constraint(equalToConstant: 166).isActive = true
         cancelButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         cancelButton.layer.cornerRadius = 16
         cancelButton.layer.borderWidth = 1
-        cancelButton.layer.borderColor = UIColor(named: "red")?.cgColor
+        cancelButton.layer.borderColor = UIColor(named: "YPred")?.cgColor
         
         createButton.setTitle("Создать", for: .normal)
         createButton.translatesAutoresizingMaskIntoConstraints = false
@@ -187,8 +187,11 @@ final class HabitCreationViewController: UIViewController {
         createButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
         createButton.tintColor = UIColor(named: "whiteDay")
         createButton.layer.cornerRadius = 16
-        createButton.backgroundColor = UIColor(named: "gray")
+        createButton.backgroundColor = UIColor(.yPgray)
         createButton.isEnabled = false
+        
+        createButton.setTitleColor(UIColor(named: "whiteDay"), for: .normal)
+        createButton.setTitleColor(UIColor(named: "whiteDay"), for: .disabled)
         
         view.addSubview(cancelButton)
         view.addSubview(createButton)
@@ -241,10 +244,12 @@ final class HabitCreationViewController: UIViewController {
             cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -34),
             cancelButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             cancelButton.trailingAnchor.constraint(equalTo: createButton.leadingAnchor, constant: -8),
-            
+            cancelButton.heightAnchor.constraint(equalToConstant: 60),
+
             createButton.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor),
             createButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            createButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor, constant: 8)
+            createButton.heightAnchor.constraint(equalToConstant: 60),
+            createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
         ])
     }
     
@@ -263,8 +268,14 @@ final class HabitCreationViewController: UIViewController {
     
     @objc private func createTapped() {
         guard let name = nameTextField.text, !name.isEmpty else { return }
-        let scheduleIndexes = selectedDays.map { $0.index }
-        let tracker = Tracker(name: name, color: selectedColor, emoji: selectedEmoji, schedule: scheduleIndexes)
+        
+        let tracker = Tracker(
+            name: name,
+            color: selectedColor,
+            emoji: selectedEmoji,
+            schedule: selectedDays
+        )
+        
         NotificationCenter.default.post(name: .didCreateTracker, object: tracker)
         dismiss(animated: true)
     }
@@ -300,21 +311,6 @@ extension HabitCreationViewController: UITextFieldDelegate {
               let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         return updatedText.count <= 38
-    }
-}
-
-// MARK: - WeekDay Extension
-extension WeekDay {
-    var index: Int {
-        switch self {
-        case .monday: return 1
-        case .tuesday: return 2
-        case .wednesday: return 3
-        case .thursday: return 4
-        case .friday: return 5
-        case .saturday: return 6
-        case .sunday: return 7
-        }
     }
 }
 
