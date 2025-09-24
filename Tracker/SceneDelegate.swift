@@ -37,21 +37,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [trackerNavController, statsNavController]
         
-        setupAppearance()
-        
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
-    }
-    
-    private func setupAppearance() {
-        
-        let tabBarAppearance = UITabBarAppearance()
-        tabBarAppearance.configureWithOpaqueBackground()
-        tabBarAppearance.backgroundColor = .white
-        UITabBar.appearance().standardAppearance = tabBarAppearance
-        if #available(iOS 15.0, *) {
-            UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
-        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -50,13 +50,7 @@ final class TrackersViewController: UIViewController {
         updatePlaceholderVisibility()
         
         hideKeyboardWhenTappedAround()
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(handleNewTracker(_:)),
-            name: .didCreateTracker,
-            object: nil
-        )
+
     }
     
     // MARK: - UI Setup
@@ -223,13 +217,12 @@ final class TrackersViewController: UIViewController {
     
     @objc private func addTapped() {
         let habitVC = HabitCreationViewController()
+        habitVC.delegate = self
         let navVC = UINavigationController(rootViewController: habitVC)
         present(navVC, animated: true)
     }
     
-    @objc private func handleNewTracker(_ notification: Notification) {
-        guard let tracker = notification.object as? Tracker else { return }
-        
+    private func addNewTracker(_ tracker: Tracker) {
         if let index = categories.firstIndex(where: { $0.title == "Важное" }) {
             var updatedTrackers = categories[index].trackers
             updatedTrackers.append(tracker)
@@ -237,7 +230,6 @@ final class TrackersViewController: UIViewController {
         } else {
             categories.append(TrackerCategory(title: "Важное", trackers: [tracker]))
         }
-        
         collectionView.reloadData()
     }
     
@@ -338,6 +330,12 @@ extension UIViewController {
     
     @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+}
+
+extension TrackersViewController: HabitCreationViewControllerDelegate {
+    func didCreateTracker(_ tracker: Tracker) {
+        addNewTracker(tracker)
     }
 }
 

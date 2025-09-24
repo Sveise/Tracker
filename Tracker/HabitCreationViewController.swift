@@ -7,18 +7,19 @@
 
 import UIKit
 
-// MARK: - Notification
-extension Notification.Name {
-    static let didCreateTracker = Notification.Name("didCreateTracker")
-}
-
 // MARK: - Protocol
 protocol ScheduleViewControllerDelegate: AnyObject {
     func didSelectDays(_ days: [WeekDay])
 }
 
+protocol HabitCreationViewControllerDelegate: AnyObject {
+    func didCreateTracker(_ tracker: Tracker)
+}
+
 // MARK: - HabitCreationViewController
 final class HabitCreationViewController: UIViewController {
+    
+    weak var delegate: HabitCreationViewControllerDelegate?
     
     private let titleLabel = UILabel()
     
@@ -276,7 +277,7 @@ final class HabitCreationViewController: UIViewController {
             schedule: selectedDays
         )
         
-        NotificationCenter.default.post(name: .didCreateTracker, object: tracker)
+        delegate?.didCreateTracker(tracker)
         dismiss(animated: true)
     }
     
