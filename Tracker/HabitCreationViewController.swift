@@ -21,6 +21,8 @@ final class HabitCreationViewController: UIViewController {
     
     weak var delegate: HabitCreationViewControllerDelegate?
     
+    private let trackerStore = TrackerStore()
+    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
@@ -215,16 +217,20 @@ final class HabitCreationViewController: UIViewController {
         
         // MARK: Layout
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 60),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
             stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            stackView.widthAnchor.constraint(equalToConstant: 343),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             
             categoryContainerView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 24),
             categoryContainerView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            categoryContainerView.widthAnchor.constraint(equalToConstant: 343),
+            categoryContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            categoryContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            
+            categoryContainerView.heightAnchor.constraint(equalToConstant: 150),
             categoryContainerView.heightAnchor.constraint(equalToConstant: 150),
             
             categoryButton.topAnchor.constraint(equalTo: categoryContainerView.topAnchor),
@@ -260,12 +266,11 @@ final class HabitCreationViewController: UIViewController {
             scheduleTapArea.bottomAnchor.constraint(equalTo: categoryContainerView.bottomAnchor),
             
             emojiLabel.topAnchor.constraint(equalTo: categoryContainerView.bottomAnchor, constant: 32),
-            emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
             
             emojiCollectionView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 24),
             emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 18),
             emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -19),
-            emojiCollectionView.heightAnchor.constraint(equalToConstant: 204),
             
             colorLabel.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: 16),
             colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28),
@@ -273,7 +278,6 @@ final class HabitCreationViewController: UIViewController {
             colorCollectionView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 24),
             colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 18),
             colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -19),
-            colorCollectionView.heightAnchor.constraint(equalToConstant: 204),
             colorCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
             
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
@@ -286,6 +290,14 @@ final class HabitCreationViewController: UIViewController {
             createButton.heightAnchor.constraint(equalToConstant: 60),
             createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
         ])
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        DispatchQueue.main.async {
+            self.configureFlowLayout(for: self.emojiCollectionView, itemsPerRow: 6, rows: 3, spacing: 8)
+            self.configureFlowLayout(for: self.colorCollectionView, itemsPerRow: 6, rows: 3, spacing: 8)
+        }
     }
     
     // MARK: - Actions
@@ -303,8 +315,20 @@ final class HabitCreationViewController: UIViewController {
     
     @objc private func createTapped() {
         guard let name = nameTextField.text, !name.isEmpty else { return }
-        let tracker = Tracker(name: name, color: selectedColor, emoji: selectedEmoji, schedule: selectedDays)
+        
+        let tracker = Tracker(
+            name: name,
+            color: selectedColor,
+            emoji: selectedEmoji,
+            schedule: selectedDays
+        )
+        
+        let trackerStore = TrackerStore()
+        
+        trackerStore.createTracker(from: tracker)
+        
         delegate?.didCreateTracker(tracker)
+        
         dismiss(animated: true)
     }
     
@@ -327,6 +351,27 @@ final class HabitCreationViewController: UIViewController {
         let sortedDays = days.sorted { $0.rawValue < $1.rawValue }
         let map: [WeekDay: String] = [.monday:"Пн", .tuesday:"Вт", .wednesday:"Ср", .thursday:"Чт", .friday:"Пт", .saturday:"Сб", .sunday:"Вс"]
         return sortedDays.compactMap { map[$0] }.joined(separator: ", ")
+    }
+    
+    private func configureFlowLayout(for collectionView: UICollectionView, itemsPerRow: Int, rows: Int, spacing: CGFloat) {
+        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return }
+        
+        let totalSpacing = spacing * CGFloat(itemsPerRow - 1) + collectionView.contentInset.left + collectionView.contentInset.right
+        let availableWidth = collectionView.bounds.width - totalSpacing
+        let itemWidth = availableWidth / CGFloat(itemsPerRow)
+        
+        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+        layout.minimumInteritemSpacing = spacing
+        layout.minimumLineSpacing = spacing
+        
+        let totalHeight = (itemWidth * CGFloat(rows)) + (layout.minimumLineSpacing * CGFloat(rows - 1))
+        
+        if let existingConstraint = collectionView.constraints.first(where: { $0.firstAttribute == .height }) {
+            existingConstraint.constant = totalHeight
+        } else {
+            let heightConstraint = collectionView.heightAnchor.constraint(equalToConstant: totalHeight)
+            heightConstraint.isActive = true
+        }
     }
 }
 
@@ -371,7 +416,7 @@ extension HabitCreationViewController: UICollectionViewDataSource, UICollectionV
         if collectionView == emojiCollectionView {
             selectedEmoji = emojies[indexPath.item]
         } else {
-
+            
             let previousSelected = selectedColorIndex
             
             selectedColorIndex = indexPath

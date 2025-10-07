@@ -21,6 +21,14 @@ struct Tracker: Codable {
         self.emoji = emoji
         self.schedule = schedule
     }
+    
+    init(id: UUID, name: String, color: String, emoji: String, schedule: [WeekDay]) {
+        self.id = id
+        self.name = name
+        self.color = color
+        self.emoji = emoji
+        self.schedule = schedule
+    }
 }
 
 struct TrackerCategory: Codable {
