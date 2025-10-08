@@ -96,18 +96,24 @@ final class HabitCreationViewController: UIViewController {
         errorLabel.isHidden = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     // MARK: - UI Setup
     private func setupUI() {
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.contentInsetAdjustmentBehavior = .never
         scrollView.addSubview(contentView)
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -76),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -134,6 +140,16 @@ final class HabitCreationViewController: UIViewController {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 0))
         nameTextField.leftView = paddingView
         nameTextField.leftViewMode = .always
+        
+        let clearButton = UIButton(type: .system)
+        clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        clearButton.tintColor = .yPgray
+        clearButton.addTarget(self, action: #selector(clearSearchText), for: .touchUpInside)
+        clearButton.frame = CGRect(x: 0, y: 0, width: 17, height: 17)
+        
+        nameTextField.rightView = clearButton
+        nameTextField.rightViewMode = .whileEditing
+        nameTextField.clearButtonMode = .never
         
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         errorLabel.textColor = UIColor(.yPred)
@@ -224,7 +240,7 @@ final class HabitCreationViewController: UIViewController {
         
         // MARK: Layout
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 30),
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
             stackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 38),
@@ -318,6 +334,10 @@ final class HabitCreationViewController: UIViewController {
     
     @objc private func cancelTapped() {
         dismiss(animated: true)
+    }
+    
+    @objc private func clearSearchText() {
+        nameTextField.text = ""
     }
     
     @objc private func createTapped() {

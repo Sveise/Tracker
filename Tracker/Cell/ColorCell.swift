@@ -28,7 +28,7 @@ final class ColorCell: UICollectionViewCell {
         clipsToBounds = true
     }
 
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) { return nil }
 
     func configure(with colorName: String, isChosen: Bool) {
         colorView.backgroundColor = UIColor(named: colorName)

@@ -41,7 +41,11 @@ final class TrackerCell: UICollectionViewCell {
         contentView.addSubview(containerView)
         
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
-        emojiLabel.font = UIFont.systemFont(ofSize: 20)
+        emojiLabel.font = UIFont.systemFont(ofSize: 13)
+        emojiLabel.backgroundColor = .colorBorder
+        emojiLabel.textAlignment = .center
+        emojiLabel.clipsToBounds = true
+        emojiLabel.layer.cornerRadius = 12
         containerView.addSubview(emojiLabel)
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false

@@ -18,7 +18,9 @@ final class TrackersViewController: UIViewController {
     // MARK: - Init
     convenience init() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            fatalError("Unable to access AppDelegate")
+            assertionFailure("Unable to access AppDelegate")
+            self.init(context: NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType))
+            return
         }
         let context = appDelegate.coreDataStack.persistentContainer.viewContext
         self.init(context: context)
@@ -188,7 +190,7 @@ final class TrackersViewController: UIViewController {
     
     private func setupPlaceholder() {
         placeholderLabel.text = "Что будем отслеживать?"
-        placeholderLabel.font = .systemFont(ofSize: 12)
+        placeholderLabel.font = UIFont(name: "SFPro-Regular", size: 12)
         placeholderLabel.textAlignment = .center
         placeholderLabel.textColor = UIColor(named: "blackDay")
         placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
