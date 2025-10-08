@@ -41,10 +41,36 @@ final class HabitCreationViewController: UIViewController {
     private let scheduleTapArea = UIView()
     
     private let emojiLabel = UILabel()
-    private var emojiCollectionView: UICollectionView!
+    private lazy var emojiCollectionView: UICollectionView = {
+        let emojiLayout = UICollectionViewFlowLayout()
+        emojiLayout.minimumInteritemSpacing = 5
+        emojiLayout.itemSize = CGSize(width: 52, height: 52)
+        let emojiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: emojiLayout)
+        emojiCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        emojiCollectionView.backgroundColor = .clear
+        emojiCollectionView.dataSource = self
+        emojiCollectionView.delegate = self
+        emojiCollectionView.register(EmojiCell.self, forCellWithReuseIdentifier: EmojiCell.reuseId)
+        return emojiCollectionView
+    }()
     
     private let colorLabel = UILabel()
-    private var colorCollectionView: UICollectionView!
+    
+    private lazy var colorCollectionView: UICollectionView = {
+        let colorLayout = UICollectionViewFlowLayout()
+        colorLayout.minimumInteritemSpacing = 5
+        colorLayout.minimumLineSpacing = 0
+        colorLayout.itemSize = CGSize(width: 52, height: 52)
+        let colorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: colorLayout)
+        colorCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        colorCollectionView.backgroundColor = .clear
+        colorCollectionView.dataSource = self
+        colorCollectionView.delegate = self
+        colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: ColorCell.reuseId)
+        return colorCollectionView
+    }()
+    
+    
     private var selectedColorIndex: IndexPath?
     
     private let cancelButton = UIButton(type: .system)
@@ -168,15 +194,6 @@ final class HabitCreationViewController: UIViewController {
         emojiLabel.font = UIFont.boldSystemFont(ofSize: 19)
         contentView.addSubview(emojiLabel)
         
-        let emojiLayout = UICollectionViewFlowLayout()
-        emojiLayout.minimumInteritemSpacing = 5
-        emojiLayout.itemSize = CGSize(width: 52, height: 52)
-        emojiCollectionView = UICollectionView(frame: .zero, collectionViewLayout: emojiLayout)
-        emojiCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        emojiCollectionView.backgroundColor = .clear
-        emojiCollectionView.dataSource = self
-        emojiCollectionView.delegate = self
-        emojiCollectionView.register(EmojiCell.self, forCellWithReuseIdentifier: EmojiCell.reuseId)
         contentView.addSubview(emojiCollectionView)
         
         colorLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -184,16 +201,6 @@ final class HabitCreationViewController: UIViewController {
         colorLabel.font = UIFont.boldSystemFont(ofSize: 19)
         contentView.addSubview(colorLabel)
         
-        let colorLayout = UICollectionViewFlowLayout()
-        colorLayout.minimumInteritemSpacing = 5
-        colorLayout.minimumLineSpacing = 0
-        colorLayout.itemSize = CGSize(width: 52, height: 52)
-        colorCollectionView = UICollectionView(frame: .zero, collectionViewLayout: colorLayout)
-        colorCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        colorCollectionView.backgroundColor = .clear
-        colorCollectionView.dataSource = self
-        colorCollectionView.delegate = self
-        colorCollectionView.register(ColorCell.self, forCellWithReuseIdentifier: ColorCell.reuseId)
         contentView.addSubview(colorCollectionView)
         
         cancelButton.setTitle("Отменить", for: .normal)
@@ -401,11 +408,16 @@ extension HabitCreationViewController: UICollectionViewDataSource, UICollectionV
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == emojiCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCell.reuseId, for: indexPath) as! EmojiCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCell.reuseId, for: indexPath) as? EmojiCell else {
+                assertionFailure("Failled to dequeue emoji cell")
+                return UICollectionViewCell() }
             cell.emojiLabel.text = emojies[indexPath.item]
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCell.reuseId, for: indexPath) as! ColorCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCell.reuseId, for: indexPath) as? ColorCell else {
+                assertionFailure("Failled to dequeue color cell")
+                return UICollectionViewCell()
+            }
             let isChosen = indexPath == selectedColorIndex
             cell.configure(with: colors[indexPath.item], isChosen: isChosen)
             return cell

@@ -6,11 +6,16 @@
 //
 
 import UIKit
+import CoreData
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     lazy var coreDataStack = CoreDataStack()
+    
+    var persistentContainer: NSPersistentContainer {
+        coreDataStack.persistentContainer
+    }
     
     func application(
         _ application: UIApplication,

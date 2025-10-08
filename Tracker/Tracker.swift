@@ -75,6 +75,6 @@ enum WeekDay: Int, CaseIterable, Codable {
     static func from(date: Date) -> WeekDay {
         let systemWeekday = Calendar.current.component(.weekday, from: date)
         let normalized = (systemWeekday == 1) ? 7 : systemWeekday - 1
-        return WeekDay(rawValue: normalized)!
+        return WeekDay(rawValue: normalized) ?? .monday
     }
 }

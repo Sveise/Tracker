@@ -20,7 +20,11 @@ final class TrackerCategoryStore: NSObject {
     
     // MARK: - Init
     convenience override init() {
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            assertionFailure("Unable to access AppDelegate")
+            self.init(context: NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType))
+            return
+        }
         let context = appDelegate.coreDataStack.persistentContainer.viewContext
         self.init(context: context)
     }
