@@ -16,6 +16,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         
+        let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
+        
+        if hasSeenOnboarding {
+            window?.rootViewController = createMainTabBarController()
+        } else {
+            window?.rootViewController = OnboardingViewController()
+        }
+        
+        window?.makeKeyAndVisible()
+    }
+    
+    func createMainTabBarController() -> UITabBarController {
         let trackerVC = TrackersViewController()
         let trackerNavController = UINavigationController(rootViewController: trackerVC)
         trackerNavController.tabBarItem = UITabBarItem(
@@ -36,26 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [trackerNavController, statsNavController]
-        
-        window?.rootViewController = tabBarController
-        window?.makeKeyAndVisible()
+        return tabBarController
     }
-    
-    func sceneDidDisconnect(_ scene: UIScene) {
-    }
-    
-    func sceneDidBecomeActive(_ scene: UIScene) {
-    }
-    
-    func sceneWillResignActive(_ scene: UIScene) {
-    }
-    
-    func sceneWillEnterForeground(_ scene: UIScene) {
-    }
-    
-    func sceneDidEnterBackground(_ scene: UIScene) {
-    }
-    
-    
 }
 

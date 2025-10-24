@@ -97,6 +97,7 @@ final class TrackerStore: NSObject {
         entity.schedule = tracker.schedule
             .map { String($0.rawValue) }
             .joined(separator: ",")
+        entity.isPinned = tracker.isPinned
     }
     
     private func saveContext() {
@@ -122,7 +123,14 @@ final class TrackerStore: NSObject {
             .compactMap { Int($0) }
             .compactMap { WeekDay(rawValue: $0) } ?? []
         
-        return Tracker(id: id, name: name, color: color, emoji: emoji, schedule: weekDays)
+        return Tracker(
+            id: id,
+            name: name,
+            color: color,
+            emoji: emoji,
+            schedule: weekDays,
+            isPinned: entity.isPinned
+        )
     }
 }
 
@@ -130,5 +138,48 @@ final class TrackerStore: NSObject {
 extension TrackerStore: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         delegate?.didUpdateTrackers()
+    }
+}
+
+// MARK: - Update Tracker
+extension TrackerStore {
+    func updateTracker(_ tracker: Tracker) {
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        
+        do {
+            if let entity = try context.fetch(request).first {
+                entity.name = tracker.name
+                entity.color = tracker.color
+                entity.emoji = tracker.emoji
+                entity.schedule = tracker.schedule
+                    .map { String($0.rawValue) }
+                    .joined(separator: ",")
+                entity.isPinned = tracker.isPinned
+                try context.save()
+                delegate?.didUpdateTrackers()
+            }
+        } catch {
+            print("❌ Ошибка обновления трекера: \(error)")
+        }
+    }
+}
+
+extension TrackerStore {
+    func togglePin(for tracker: Tracker) {
+        let request: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        
+        do {
+            if let entity = try context.fetch(request).first {
+                entity.isPinned = !(entity.isPinned)
+            } else {
+                print("⚠️ Трекер не найден для togglePin")
+            }
+            try context.save()
+            delegate?.didUpdateTrackers()
+        } catch {
+            print("❌ Ошибка togglePin: \(error)")
+        }
     }
 }

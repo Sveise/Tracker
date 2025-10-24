@@ -40,4 +40,9 @@ final class EmojiCell: UICollectionViewCell {
             }
         }
     }
+    
+    func configure(isSelected: Bool) {
+        contentView.backgroundColor = isSelected ? UIColor(named: "lightGray") : .clear
+        contentView.layer.cornerRadius = 16
+    }
 }

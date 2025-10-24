@@ -13,6 +13,7 @@ protocol TrackerCategoryStoreDelegate: AnyObject {
 }
 
 final class TrackerCategoryStore: NSObject {
+    
     // MARK: - Properties
     private let context: NSManagedObjectContext
     private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>?
@@ -21,11 +22,9 @@ final class TrackerCategoryStore: NSObject {
     // MARK: - Init
     convenience override init() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            assertionFailure("Unable to access AppDelegate")
-            self.init(context: NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType))
-            return
+            fatalError("❌ Не удалось получить AppDelegate")
         }
-        let context = appDelegate.coreDataStack.persistentContainer.viewContext
+        let context = appDelegate.coreDataStack.context
         self.init(context: context)
     }
     
@@ -98,12 +97,11 @@ final class TrackerCategoryStore: NSObject {
         }
 
         categoryEntity.addToTrackers(NSSet(array: newTrackerEntities))
-
         saveContext()
     }
     
     private func fetchCategoryEntity(with title: String) -> TrackerCategoryCoreData? {
-        let request = TrackerCategoryCoreData.fetchRequest()
+        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
         request.predicate = NSPredicate(format: "title == %@", title)
         return try? context.fetch(request).first
     }
@@ -118,6 +116,34 @@ final class TrackerCategoryStore: NSObject {
             }
         } catch {
             print("❌ Ошибка удаления категории: \(error)")
+        }
+    }
+    
+    func deleteCategory(_ category: TrackerCategory) {
+        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "title == %@", category.title)
+        
+        do {
+            if let object = try context.fetch(request).first {
+                context.delete(object)
+                saveContext()
+            }
+        } catch {
+            print("❌ Ошибка удаления категории: \(error)")
+        }
+    }
+    
+    func renameCategory(_ category: TrackerCategory, newTitle: String) {
+        let request: NSFetchRequest<TrackerCategoryCoreData> = TrackerCategoryCoreData.fetchRequest()
+        request.predicate = NSPredicate(format: "title == %@", category.title)
+        
+        do {
+            if let object = try context.fetch(request).first {
+                object.title = newTitle
+                saveContext()
+            }
+        } catch {
+            print("❌ Ошибка переименования категории: \(error)")
         }
     }
     

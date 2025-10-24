@@ -7,27 +7,33 @@
 
 import UIKit
 
-struct Tracker: Codable {
+struct Tracker: Codable, Equatable {
     let id: UUID
     let name: String
     let color: String
     let emoji: String
     let schedule: [WeekDay]
+    var isPinned: Bool
+    static func == (lhs: Tracker, rhs: Tracker) -> Bool {
+        lhs.id == rhs.id
+    }
     
-    init(name: String, color: String, emoji: String, schedule: [WeekDay]) {
+    init(name: String, color: String, emoji: String, schedule: [WeekDay], isPinned: Bool = false) {
         self.id = UUID()
         self.name = name
         self.color = color
         self.emoji = emoji
         self.schedule = schedule
+        self.isPinned = isPinned
     }
     
-    init(id: UUID, name: String, color: String, emoji: String, schedule: [WeekDay]) {
+    init(id: UUID, name: String, color: String, emoji: String, schedule: [WeekDay], isPinned: Bool = false) {
         self.id = id
         self.name = name
         self.color = color
         self.emoji = emoji
         self.schedule = schedule
+        self.isPinned = isPinned
     }
 }
 

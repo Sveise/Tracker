@@ -10,7 +10,7 @@ import UIKit
 final class TrackerCell: UICollectionViewCell {
     
     // MARK: - UI Elements
-    private let containerView = UIView()
+    let containerView = UIView()
     private let emojiLabel = UILabel()
     private let nameLabel = UILabel()
     private let daysLabel = UILabel()
@@ -64,6 +64,8 @@ final class TrackerCell: UICollectionViewCell {
         completionButton.addTarget(self, action: #selector(completionButtonTapped), for: .touchUpInside)
         contentView.addSubview(completionButton)
         
+        containerView.addSubview(pinImageView)
+        
         NSLayoutConstraint.activate([
             // containerView
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
@@ -90,9 +92,23 @@ final class TrackerCell: UICollectionViewCell {
             completionButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 8),
             completionButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             completionButton.widthAnchor.constraint(equalToConstant: 34),
-            completionButton.heightAnchor.constraint(equalToConstant: 34)
+            completionButton.heightAnchor.constraint(equalToConstant: 34),
+            
+            pinImageView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 18),
+            pinImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -12),
+            pinImageView.widthAnchor.constraint(equalToConstant: 8),
+            pinImageView.heightAnchor.constraint(equalToConstant: 12)
         ])
     }
+    
+    private let pinImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "pin")
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
     
     // MARK: - Configure
     func configure(with tracker: Tracker, selectedDate: Date, isCompleted: Bool, completedCount: Int) {
@@ -103,10 +119,12 @@ final class TrackerCell: UICollectionViewCell {
         nameLabel.text = tracker.name
         containerView.backgroundColor = UIColor(named: tracker.color) ?? UIColor.systemGreen
         
-        let dayText = getDayText(for: completedCount)
+        let dayText = completedCount.dayText()
         daysLabel.text = "\(completedCount) \(dayText)"
         
         updateCompletionButton(isCompleted: isCompleted)
+        
+        pinImageView.isHidden = !tracker.isPinned
     }
     
     // MARK: - Completion Button
@@ -128,18 +146,6 @@ final class TrackerCell: UICollectionViewCell {
             completionButton.setTitleColor(.white, for: .normal)
             completionButton.backgroundColor = cellColor
             completionButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .medium)
-        }
-    }
-    
-    // MARK: - Helpers
-    private func getDayText(for count: Int) -> String {
-        let lastDigit = count % 10
-        let lastTwoDigits = count % 100
-        if lastTwoDigits >= 11 && lastTwoDigits <= 19 { return "дней" }
-        switch lastDigit {
-        case 1: return "день"
-        case 2,3,4: return "дня"
-        default: return "дней"
         }
     }
 }
