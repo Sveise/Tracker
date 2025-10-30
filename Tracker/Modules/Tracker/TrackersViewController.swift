@@ -674,6 +674,3 @@ extension TrackersViewController: UIScrollViewDelegate {
     }
 }
 
-#Preview {
-    TrackersViewController()
-}

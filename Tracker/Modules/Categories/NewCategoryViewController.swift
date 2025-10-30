@@ -99,6 +99,3 @@ extension NewCategoryViewController {
     }
 }
 
-#Preview {
-    NewCategoryViewController()
-}

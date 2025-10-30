@@ -103,15 +103,6 @@ final class CategoriesViewModel {
     }
 }
 
-// MARK: - Data Models
-struct CategoryCellConfiguration {
-    let title: String
-    let isSelected: Bool
-    let isFirst: Bool
-    let isLast: Bool
-    let showSeparator: Bool
-}
-
 // MARK: - TrackerCategoryStoreDelegate
 extension CategoriesViewModel: TrackerCategoryStoreDelegate {
     func didUpdateCategories() {
