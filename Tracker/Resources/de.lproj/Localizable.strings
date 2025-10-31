@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Svetlana Varenova on 31.10.2025.
+  
+*/
+"trackers_title" = "Tracker";
+"search_placeholder" = "Suche";
+"pinned" = "Angeheftet";
+"delete" = "Löschen";
+"edit" = "Bearbeiten";
+"unpin" = "Loslösen";
+"pin" = "Anheften";
+"nothing_found" = "Nichts gefunden";
+"delete_confirmation" = "Sind Sie sicher, dass Sie den Tracker löschen möchten?";
+"cancel" = "Abbrechen";
+"what_to_track" = "Was möchten Sie verfolgen?";

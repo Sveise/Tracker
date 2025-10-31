@@ -62,7 +62,10 @@ final class TrackersViewController: UIViewController {
         var resultCategories: [TrackerCategory] = []
         
         if !pinnedTrackers.isEmpty {
-            let pinnedCategory = TrackerCategory(title: "Закрепленные", trackers: pinnedTrackers)
+            let pinnedCategory = TrackerCategory(
+                title: NSLocalizedString("pinned", comment: ""),
+                trackers: pinnedTrackers
+            )
             resultCategories.append(pinnedCategory)
         }
         
@@ -206,7 +209,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupTrackerLabel() {
-        trackerLabel.text = "Трекеры"
+        trackerLabel.text = NSLocalizedString("trackers_title", comment: "")
         trackerLabel.textColor = UIColor(named: "blackDay")
         trackerLabel.font = UIFont(name: "SFPro-Bold", size: 34) ?? .boldSystemFont(ofSize: 34)
         trackerLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -243,7 +246,7 @@ final class TrackersViewController: UIViewController {
         searchIcon.translatesAutoresizingMaskIntoConstraints = false
         searchView.addSubview(searchIcon)
         
-        searchTextField.placeholder = "Поиск"
+        searchTextField.placeholder = NSLocalizedString("search_placeholder", comment: "")
         searchTextField.textColor = UIColor(named: "YPgray")
         searchTextField.font = UIFont(name: "SFPro-Regular", size: 17) ?? .systemFont(ofSize: 17)
         searchTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -252,7 +255,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupPlaceholder() {
-        placeholderLabel.text = "Что будем отслеживать?"
+        placeholderLabel.text = NSLocalizedString("what_to_track", comment: "")
         placeholderLabel.font = UIFont(name: "SFPro-Regular", size: 12)
         placeholderLabel.textAlignment = .center
         placeholderLabel.textColor = UIColor(named: "blackDay")
@@ -264,13 +267,12 @@ final class TrackersViewController: UIViewController {
         placeholderImage.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(placeholderImage)
         
-        notFoundImageView.image = UIImage(named: "nothingFound")
+        notFoundLabel.text = NSLocalizedString("nothing_found", comment: "")
         notFoundImageView.contentMode = .scaleAspectFit
         notFoundImageView.translatesAutoresizingMaskIntoConstraints = false
         notFoundImageView.isHidden = true
         view.addSubview(notFoundImageView)
         
-        notFoundLabel.text = "Ничего не найдено"
         notFoundLabel.font = UIFont(name: "SFPro-Regular", size: 12)
         notFoundLabel.textColor = UIColor(named: "blackDay")
         notFoundLabel.textAlignment = .center
@@ -360,20 +362,24 @@ final class TrackersViewController: UIViewController {
         present(navVC, animated: true)
     }
     
+
     private func createContextMenu(for tracker: Tracker) -> UIMenu {
-        let pinTitle = tracker.isPinned ? "Открепить" : "Закрепить"
+        let pinTitle = tracker.isPinned
+            ? NSLocalizedString("unpin", comment: "")
+            : NSLocalizedString("pin", comment: "")
         let pinAction = UIAction(title: pinTitle) { [weak self] _ in
             self?.togglePin(for: tracker)
         }
-        
-        let editAction = UIAction(title: "Редактировать") { [weak self] _ in
+
+        let editAction = UIAction(title: NSLocalizedString("edit", comment: "")) { [weak self] _ in
             self?.editTracker(tracker)
         }
-        
-        let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { [weak self] _ in
+
+        let deleteAction = UIAction(title: NSLocalizedString("delete", comment: ""),
+                                    attributes: .destructive) { [weak self] _ in
             self?.showDeleteConfirmation(for: tracker)
         }
-        
+
         return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
     }
     
@@ -395,16 +401,22 @@ final class TrackersViewController: UIViewController {
     
     private func showDeleteConfirmation(for tracker: Tracker) {
         let alert = UIAlertController(
-            title: "Уверены что хотите удалить трекер?",
+            title: NSLocalizedString("delete_confirmation", comment: ""),
             message: nil,
             preferredStyle: .actionSheet
         )
-        
-        let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { [weak self] _ in
+
+        let deleteAction = UIAlertAction(
+            title: NSLocalizedString("delete", comment: ""),
+            style: .destructive
+        ) { [weak self] _ in
             self?.deleteTracker(tracker)
         }
-        
-        let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
+
+        let cancelAction = UIAlertAction(
+            title: NSLocalizedString("cancel", comment: ""),
+            style: .cancel
+        )
         
         alert.addAction(deleteAction)
         alert.addAction(cancelAction)

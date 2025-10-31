@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Svetlana Varenova on 31.10.2025.
+  
+*/
+"trackers_title" = "المتعقبات";
+"search_placeholder" = "بحث";
+"pinned" = "المثبتة";
+"delete" = "حذف";
+"edit" = "تعديل";
+"unpin" = "إلغاء التثبيت";
+"pin" = "تثبيت";
+"nothing_found" = "لم يتم العثور على شيء";
+"delete_confirmation" = "هل أنت متأكد أنك تريد حذف المتعقب؟";
+"cancel" = "إلغاء";
+"what_to_track" = "ما الذي تريد تتبعه؟";
