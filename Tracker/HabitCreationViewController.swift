@@ -93,7 +93,7 @@ final class HabitCreationViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .whiteDay
         setupUI()
         
         if let tracker = trackerToEdit {
@@ -259,7 +259,8 @@ final class HabitCreationViewController: UIViewController {
         createButton.setTitle("Создать", for: .normal)
         createButton.translatesAutoresizingMaskIntoConstraints = false
         createButton.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
-        createButton.tintColor = UIColor(named: "whiteDay")
+        createButton.setTitleColor(UIColor(.whiteDay), for: .normal)
+        createButton.setTitleColor(UIColor(.white), for: .disabled)
         createButton.layer.cornerRadius = 16
         createButton.backgroundColor = UIColor(.yPgray)
         createButton.isEnabled = false

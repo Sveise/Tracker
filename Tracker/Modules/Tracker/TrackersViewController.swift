@@ -105,7 +105,7 @@ final class TrackersViewController: UIViewController {
         layout.scrollDirection = .vertical
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .white
+        cv.backgroundColor = .whiteDay
         cv.dataSource = self
         cv.delegate = self
         cv.translatesAutoresizingMaskIntoConstraints = false
@@ -121,7 +121,7 @@ final class TrackersViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         
         trackerStore.delegate = self
         categoryStore.delegate = self
@@ -228,7 +228,7 @@ final class TrackersViewController: UIViewController {
     
     private func setupAddButton() {
         addButton.setImage(UIImage(named: "Add tracker"), for: .normal)
-        addButton.tintColor = .black
+        addButton.tintColor = .blackDay
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
         view.addSubview(addButton)
@@ -268,6 +268,7 @@ final class TrackersViewController: UIViewController {
         view.addSubview(placeholderImage)
         
         notFoundLabel.text = NSLocalizedString("nothing_found", comment: "")
+        notFoundImageView.image = UIImage(named: "nothingFound")
         notFoundImageView.contentMode = .scaleAspectFit
         notFoundImageView.translatesAutoresizingMaskIntoConstraints = false
         notFoundImageView.isHidden = true
@@ -686,3 +687,6 @@ extension TrackersViewController: UIScrollViewDelegate {
     }
 }
 
+#Preview{
+    TrackersViewController()
+}
