@@ -13,16 +13,19 @@ final class TrackerTests: XCTestCase {
     
     func testViewControllerSnapshot() {
         let vc = TrackersViewController()
+        ///isRecording = true
         assertSnapshot(matching: vc, as: .image(on: .iPhone13))
     }
     
     func testViewControllerDarkTheme() {
         let vc = TrackersViewController()
+        //isRecording = true
         assertSnapshot(matching: vc, as: .image(on: .iPhone13, traits: .init(userInterfaceStyle: .dark)))
     }
     
     func testViewControllerLightTheme() {
         let vc = TrackersViewController()
+        //isRecording = true
         assertSnapshot(matching: vc, as: .image(on: .iPhone13, traits: .init(userInterfaceStyle: .light)))
     }
 }

@@ -90,9 +90,9 @@ final class CategoriesViewController: UIViewController {
         view.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 36),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 22)
+            titleLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     

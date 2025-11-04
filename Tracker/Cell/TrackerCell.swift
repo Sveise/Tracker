@@ -124,7 +124,9 @@ final class TrackerCell: UICollectionViewCell {
         
         updateCompletionButton(isCompleted: isCompleted)
         
-        pinImageView.isHidden = !tracker.isPinned
+        UIView.transition(with: pinImageView, duration: 0.2, options: .transitionCrossDissolve) {
+            self.pinImageView.isHidden = !tracker.isPinned
+        }
     }
     
     // MARK: - Completion Button

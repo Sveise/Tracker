@@ -36,9 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             tag: 0
         )
         
-        let statsVC = UIViewController()
-        statsVC.view.backgroundColor = .white
-        statsVC.title = "Статистика"
+        let statsVC = StatsViewController()
         let statsNavController = UINavigationController(rootViewController: statsVC)
         statsNavController.tabBarItem = UITabBarItem(
             title: "Статистика",
@@ -55,13 +53,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         tabBarController.tabBar.standardAppearance = tabBarAppearance
         tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearance
-        tabBarController.tabBar.tintColor = UIColor(named: "blackDay")
-
-        let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.backgroundColor = UIColor(named: "whiteDay")
-        UINavigationBar.appearance().standardAppearance = navBarAppearance
-        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
+        tabBarController.tabBar.tintColor = UIColor(named: "YP Blue")
         
         return tabBarController
     }

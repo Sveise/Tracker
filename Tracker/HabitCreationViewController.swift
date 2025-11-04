@@ -365,8 +365,8 @@ final class HabitCreationViewController: UIViewController {
         let scheduleVC = ScheduleViewController()
         scheduleVC.delegate = self
         scheduleVC.setSelectedDays(Set(selectedDays))
-        let navVC = UINavigationController(rootViewController: scheduleVC)
-        present(navVC, animated: true)
+        scheduleVC.modalPresentationStyle = .pageSheet
+        present(scheduleVC, animated: true)
     }
     
     @objc private func cancelTapped() {
@@ -405,8 +405,8 @@ final class HabitCreationViewController: UIViewController {
     @objc private func openCategory() {
         let categoriesVC = CategoriesViewController()
         categoriesVC.delegate = self
-        let navVC = UINavigationController(rootViewController: categoriesVC)
-        present(navVC, animated: true)
+        categoriesVC.modalPresentationStyle = .pageSheet
+        present(categoriesVC, animated: true)
     }
     
     @objc private func textFieldDidChange() {
