@@ -204,6 +204,12 @@ final class TrackersViewController: UIViewController {
         
         updatePlaceholderVisibility()
         hideKeyboardWhenTappedAround()
+        AnalyticsService.report(event: .open, screen: "Main")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        AnalyticsService.report(event: .close, screen: "Main")
     }
     
     // MARK: - Data
@@ -439,6 +445,7 @@ final class TrackersViewController: UIViewController {
         filtersVC.delegate = self
         filtersVC.selectedFilter = currentFilter
         filtersVC.modalPresentationStyle = .pageSheet
+        AnalyticsService.report(event: .click, screen: "Main", item: "filter")
         present(filtersVC, animated: true)
     }
     
@@ -454,6 +461,8 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func addTapped() {
+        AnalyticsService.report(event: .click, screen: "Main", item: "add_track")
+        
         let habitVC = HabitCreationViewController()
         habitVC.delegate = self
         habitVC.modalPresentationStyle = .pageSheet
@@ -471,10 +480,12 @@ final class TrackersViewController: UIViewController {
         }
         
         let editAction = UIAction(title: NSLocalizedString("edit", comment: ""), image: UIImage(systemName: "square.and.pencil")) { [weak self] _ in
+            AnalyticsService.report(event: .click, screen: "Main", item: "edit")
             self?.editTracker(tracker)
         }
         
         let deleteAction = UIAction(title: NSLocalizedString("delete", comment: ""), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+            AnalyticsService.report(event: .click, screen: "Main", item: "delete")
             self?.showDeleteConfirmation(for: tracker)
         }
         
@@ -563,34 +574,39 @@ final class TrackersViewController: UIViewController {
         let allTrackers = filteredCategories.flatMap { $0.trackers }
         let hasTrackers = !allTrackers.isEmpty
         let isSearching = !(searchTextField.text?.isEmpty ?? true)
-        
         let nothingFound = isSearching && allTrackers.isEmpty
+        
+        let totalTrackers = trackers.count
         
         placeholderLabel.isHidden = hasTrackers || isSearching || currentFilter != .all
         placeholderImage.isHidden = hasTrackers || isSearching || currentFilter != .all
         notFoundLabel.isHidden = !nothingFound
         notFoundImageView.isHidden = !nothingFound
         collectionView.isHidden = nothingFound || !hasTrackers
-        
         filterButton.isHidden = !hasTrackers && currentFilter == .all
+        
+        if totalTrackers == 0 {
+            placeholderLabel.text = NSLocalizedString("what_to_track", comment: "Что будем отслеживать?")
+            placeholderLabel.isHidden = false
+            placeholderImage.isHidden = false
+            notFoundLabel.isHidden = true
+            notFoundImageView.isHidden = true
+            return
+        }
         
         if !hasTrackers && currentFilter != .all {
             switch currentFilter {
             case .completed:
                 placeholderLabel.text = NSLocalizedString("no_completed", comment: "Нет завершённых")
-                placeholderLabel.isHidden = false
-                placeholderImage.isHidden = false
             case .notCompleted:
                 placeholderLabel.text = NSLocalizedString("no_uncompleted", comment: "Нет незавершённых")
-                placeholderLabel.isHidden = false
-                placeholderImage.isHidden = false
             case .today:
                 placeholderLabel.text = NSLocalizedString("no_trackers_today", comment: "Нет трекеров на сегодня")
-                placeholderLabel.isHidden = false
-                placeholderImage.isHidden = false
             default:
                 break
             }
+            placeholderLabel.isHidden = false
+            placeholderImage.isHidden = false
         }
     }
     
@@ -694,6 +710,7 @@ extension TrackersViewController: UICollectionViewDataSource, UICollectionViewDe
         cell.onCompletionToggled = { [weak self] tracker in
             guard let self = self else { return }
             self.toggleCompletion(for: tracker, on: self.currentDate)
+            AnalyticsService.report(event: .click, screen: "Main", item: "track")
         }
         return cell
     }

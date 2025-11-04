@@ -9,11 +9,20 @@ import UIKit
 
 final class StatsViewController: UIViewController {
     
-    private let textLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Статистика"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 32, weight: .bold)
+        label.font = .systemFont(ofSize: 34, weight: .bold)
+        label.textColor = .blackDay
+        return label
+    }()
+    
+    private let textLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Анализировать пока нечего"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .blackDay
         return label
     }()
@@ -30,21 +39,25 @@ final class StatsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .whiteDay
         
-        view.addSubview(textLabel)
+        view.addSubview(titleLabel)
         view.addSubview(imageStats)
+        view.addSubview(textLabel)
         setupConstraits()
         
     }
     
     private func setupConstraits() {
         NSLayoutConstraint.activate([
-            textLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44),
-            textLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 88),
+            titleLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             
             imageStats.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             imageStats.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             imageStats.widthAnchor.constraint(equalToConstant: 80),
-            imageStats.heightAnchor.constraint(equalToConstant: 80)
+            imageStats.heightAnchor.constraint(equalToConstant: 80),
+            
+            textLabel.topAnchor.constraint(equalTo: imageStats.bottomAnchor, constant: 8),
+            textLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
             ])
     }
 }
