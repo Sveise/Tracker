@@ -28,7 +28,7 @@ final class CategoryTableViewCell: UITableViewCell {
     
     private let separatorView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "yPgray") ?? .systemGray4
+        view.backgroundColor = .separator
         view.isHidden = true
         return view
     }()

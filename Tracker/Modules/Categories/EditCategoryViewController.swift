@@ -49,7 +49,7 @@ final class EditCategoryViewController: UIViewController {
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         
         saveButton.setTitle("Сохранить", for: .normal)
-        saveButton.backgroundColor = .black
+        saveButton.backgroundColor = .blackDay
         saveButton.setTitleColor(.white, for: .normal)
         saveButton.layer.cornerRadius = 16
         saveButton.addTarget(self, action: #selector(saveTapped), for: .touchUpInside)

@@ -86,7 +86,11 @@ final class NewCategoryViewController: UIViewController {
     
     private func updateDoneButtonState() {
         let hasText = !(textField.text ?? "").isEmpty
-        
+        if hasText && traitCollection.userInterfaceStyle != .light {
+            doneButton.setTitleColor(.black, for: .normal)
+        } else {
+            doneButton.setTitleColor(.white, for: .normal)
+        }
         doneButton.backgroundColor = (hasText) ? UIColor(named: "blackDay") : UIColor(.yPgray)
         doneButton.isEnabled = hasText
     }
@@ -99,3 +103,6 @@ extension NewCategoryViewController {
     }
 }
 
+#Preview {
+    NewCategoryViewController()
+}

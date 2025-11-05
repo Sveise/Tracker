@@ -20,7 +20,7 @@ final class ScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        view.backgroundColor = .whiteDay
         setupTitleLabel()
         setupTableView()
         setupDoneButton()
@@ -34,49 +34,63 @@ final class ScheduleViewController: UIViewController {
     private func setupTitleLabel() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont(name: "SFPro-Medium", size: 16) ?? UIFont.systemFont(ofSize: 16, weight: .medium)
-        titleLabel.textColor = .black
+        titleLabel.textColor = .blackDay
         titleLabel.textAlignment = .center
         titleLabel.text = "Расписание"
         view.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 22)
+            titleLabel.heightAnchor.constraint(equalToConstant: 38)
         ])
     }
     
     private func setupTableView() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = .white
+        containerView.backgroundColor = .clear
         containerView.layer.cornerRadius = 16
+        containerView.clipsToBounds = true
         view.addSubview(containerView)
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .backgroundDay
         tableView.register(ScheduleCell.self, forCellReuseIdentifier: ScheduleCell.identifier)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.isScrollEnabled = true
+        tableView.isScrollEnabled = false
+        tableView.layer.cornerRadius = 16
+        tableView.clipsToBounds = true
+        tableView.separatorStyle = .none
         containerView.addSubview(tableView)
         
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -120),
             
             tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
+        
+        updateContainerHeight()
+    }
+    
+    private func updateContainerHeight() {
+        let rowHeight: CGFloat = 75
+        let numberOfRows = CGFloat(WeekDay.allCases.count)
+        let totalHeight = rowHeight * numberOfRows
+        
+        containerView.heightAnchor.constraint(equalToConstant: totalHeight).isActive = true
     }
     
     private func setupDoneButton() {
         doneButton.setTitle("Готово", for: .normal)
         doneButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        doneButton.setTitleColor(.white, for: .normal)
-        doneButton.backgroundColor = .black
+        doneButton.setTitleColor(.whiteDay, for: .normal)
+        doneButton.backgroundColor = .blackDay
         doneButton.layer.cornerRadius = 16
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         doneButton.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
@@ -130,7 +144,49 @@ extension ScheduleViewController: UITableViewDataSource {
             }
         }
         
+        configureCellAppearance(cell, for: indexPath)
+        
         return cell
+    }
+    
+    private func configureCellAppearance(_ cell: UITableViewCell, for indexPath: IndexPath) {
+        let numberOfRows = tableView.numberOfRows(inSection: indexPath.section)
+        
+        let backgroundView = UIView()
+        backgroundView.backgroundColor = .backgroundDay
+        
+        if numberOfRows == 1 {
+            backgroundView.layer.cornerRadius = 16
+            backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        } else {
+            switch indexPath.row {
+            case 0:
+                backgroundView.layer.cornerRadius = 16
+                backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            case numberOfRows - 1:
+                backgroundView.layer.cornerRadius = 16
+                backgroundView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+            default:
+                backgroundView.layer.cornerRadius = 0
+            }
+        }
+        
+        cell.backgroundView = backgroundView
+        cell.selectedBackgroundView = UIView()
+        
+        if indexPath.row < numberOfRows - 1 {
+            let separator = UIView()
+            separator.backgroundColor = .lightGray.withAlphaComponent(0.3)
+            separator.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(separator)
+            
+            NSLayoutConstraint.activate([
+                separator.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
+                separator.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
+                separator.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
+                separator.heightAnchor.constraint(equalToConstant: 0.5)
+            ])
+        }
     }
 }
 
@@ -145,4 +201,8 @@ extension ScheduleViewController: UITableViewDelegate {
                    heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
     }
+}
+
+#Preview {
+    ScheduleViewController()
 }

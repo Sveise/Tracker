@@ -90,15 +90,15 @@ final class CategoriesViewController: UIViewController {
         view.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 36),
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 27),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.heightAnchor.constraint(equalToConstant: 22)
+            titleLabel.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     
     private func setupTableViewContainer() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = .white
+        containerView.backgroundColor = .whiteDay
         containerView.layer.cornerRadius = 16
         containerView.layer.masksToBounds = true
         view.addSubview(containerView)
@@ -127,8 +127,8 @@ final class CategoriesViewController: UIViewController {
     private func setupAddButton() {
         addButton.setTitle("Добавить категорию", for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        addButton.backgroundColor = .black
-        addButton.setTitleColor(.white, for: .normal)
+        addButton.backgroundColor = .blackDay
+        addButton.setTitleColor(.whiteDay, for: .normal)
         addButton.layer.cornerRadius = 16
         addButton.translatesAutoresizingMaskIntoConstraints = false
         addButton.addTarget(self, action: #selector(addCategoryTapped), for: .touchUpInside)

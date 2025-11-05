@@ -12,11 +12,11 @@ extension Int {
         let count = self
         let lastDigit = count % 10
         let lastTwoDigits = count % 100
-        if lastTwoDigits >= 11 && lastTwoDigits <= 19 { return "дней" }
+        if lastTwoDigits >= 11 && lastTwoDigits <= 19 { return NSLocalizedString("days", comment: "") }
         switch lastDigit {
-        case 1: return "день"
-        case 2, 3, 4: return "дня"
-        default: return "дней"
+        case 1: return NSLocalizedString("day", comment: "")
+        case 2, 3, 4: return NSLocalizedString("days", comment: "")
+        default: return NSLocalizedString("dayss", comment: "")
         }
     }
 }

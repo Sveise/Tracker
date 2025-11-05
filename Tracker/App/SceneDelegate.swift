@@ -31,23 +31,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let trackerVC = TrackersViewController()
         let trackerNavController = UINavigationController(rootViewController: trackerVC)
         trackerNavController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: NSLocalizedString("Trackers", comment: ""),
             image: UIImage(named: "trackers"),
             tag: 0
         )
         
-        let statsVC = UIViewController()
-        statsVC.view.backgroundColor = .white
-        statsVC.title = "Статистика"
+        let statsVC = StatsViewController()
         let statsNavController = UINavigationController(rootViewController: statsVC)
         statsNavController.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: NSLocalizedString("Statistics", comment: ""),
             image: UIImage(named: "stats"),
             tag: 1
         )
         
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [trackerNavController, statsNavController]
+        
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = UIColor(named: "whiteDay")
+
+        tabBarController.tabBar.standardAppearance = tabBarAppearance
+        tabBarController.tabBar.scrollEdgeAppearance = tabBarAppearance
+        tabBarController.tabBar.tintColor = UIColor(named: "YP Blue")
+        
         return tabBarController
     }
 }

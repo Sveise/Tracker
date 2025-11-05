@@ -93,7 +93,7 @@ final class HabitCreationViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .whiteDay
         setupUI()
         
         if let tracker = trackerToEdit {
@@ -259,7 +259,8 @@ final class HabitCreationViewController: UIViewController {
         createButton.setTitle("Создать", for: .normal)
         createButton.translatesAutoresizingMaskIntoConstraints = false
         createButton.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
-        createButton.tintColor = UIColor(named: "whiteDay")
+        createButton.setTitleColor(UIColor(.whiteDay), for: .normal)
+        createButton.setTitleColor(UIColor(.white), for: .disabled)
         createButton.layer.cornerRadius = 16
         createButton.backgroundColor = UIColor(.yPgray)
         createButton.isEnabled = false
@@ -364,8 +365,8 @@ final class HabitCreationViewController: UIViewController {
         let scheduleVC = ScheduleViewController()
         scheduleVC.delegate = self
         scheduleVC.setSelectedDays(Set(selectedDays))
-        let navVC = UINavigationController(rootViewController: scheduleVC)
-        present(navVC, animated: true)
+        scheduleVC.modalPresentationStyle = .pageSheet
+        present(scheduleVC, animated: true)
     }
     
     @objc private func cancelTapped() {
@@ -404,8 +405,8 @@ final class HabitCreationViewController: UIViewController {
     @objc private func openCategory() {
         let categoriesVC = CategoriesViewController()
         categoriesVC.delegate = self
-        let navVC = UINavigationController(rootViewController: categoriesVC)
-        present(navVC, animated: true)
+        categoriesVC.modalPresentationStyle = .pageSheet
+        present(categoriesVC, animated: true)
     }
     
     @objc private func textFieldDidChange() {
