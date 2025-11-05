@@ -16,6 +16,9 @@
 "delete_confirmation" = "Sind Sie sicher, dass Sie den Tracker löschen möchten?";
 "cancel" = "Abbrechen";
 "what_to_track" = "Was möchten Sie verfolgen?";
-"no_completed" = "Keine abgeschlossenen Tracker";
-"no_uncompleted" = "Keine unvollständigen Tracker";
-"no_trackers_today" = "Keine Tracker für heute";
+"day" = "Tag";
+"days" = "Tage";
+"dayss" = "Tage";
+"Trackers" = "Tracker";
+"Statistics" = "Statistik";
+"Filters" = "Filter";

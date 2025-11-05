@@ -84,11 +84,15 @@ final class TrackersViewController: UIViewController {
         for category in categories {
             guard category.title != "Закрепленные" else { continue }
             
+            let nonPinnedTrackers = category.trackers.filter { tracker in
+                !tracker.isPinned && !pinnedTrackers.contains(where: { $0.id == tracker.id })
+            }
+            
             let baseTrackers: [Tracker]
             if currentFilter == .all {
-                baseTrackers = category.trackers
+                baseTrackers = nonPinnedTrackers
             } else {
-                baseTrackers = category.trackers.filter { isTrackerActive($0, on: currentDate) }
+                baseTrackers = nonPinnedTrackers.filter { isTrackerActive($0, on: currentDate) }
             }
             
             let filteredTrackers = applyCurrentFilter(to: baseTrackers)
@@ -177,7 +181,7 @@ final class TrackersViewController: UIViewController {
     // MARK: - Filter Button
     private let filterButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(NSLocalizedString("Filters", comment: ""), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         button.backgroundColor = UIColor(named: "YPBlue") ?? .systemBlue
         button.setTitleColor(.white, for: .normal)
@@ -248,6 +252,7 @@ final class TrackersViewController: UIViewController {
         trackerStore.togglePin(for: tracker)
         trackers = trackerStore.getAllTrackers()
         loadPinnedTrackers()
+        categories = categoryStore.getAllCategories()
         
         UIView.transition(with: collectionView, duration: 0.25, options: .transitionCrossDissolve) {
             self.collectionView.reloadData()
@@ -595,16 +600,8 @@ final class TrackersViewController: UIViewController {
         }
         
         if !hasTrackers && currentFilter != .all {
-            switch currentFilter {
-            case .completed:
-                placeholderLabel.text = NSLocalizedString("no_completed", comment: "Нет завершённых")
-            case .notCompleted:
-                placeholderLabel.text = NSLocalizedString("no_uncompleted", comment: "Нет незавершённых")
-            case .today:
-                placeholderLabel.text = NSLocalizedString("no_trackers_today", comment: "Нет трекеров на сегодня")
-            default:
-                break
-            }
+            placeholderImage.image = UIImage(resource: .nothingFound)
+                placeholderLabel.text = NSLocalizedString("nothing_found", comment: "Ничего не найдено")
             placeholderLabel.isHidden = false
             placeholderImage.isHidden = false
         }
@@ -770,7 +767,8 @@ extension UIViewController {
 extension TrackersViewController: TrackerStoreDelegate {
     func didUpdateTrackers() {
         trackers = trackerStore.getAllTrackers()
-        collectionView.reloadData()
+        loadPinnedTrackers()
+        applyFilter()
     }
 }
 

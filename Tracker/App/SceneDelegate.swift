@@ -31,7 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let trackerVC = TrackersViewController()
         let trackerNavController = UINavigationController(rootViewController: trackerVC)
         trackerNavController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: NSLocalizedString("Trackers", comment: ""),
             image: UIImage(named: "trackers"),
             tag: 0
         )
@@ -39,7 +39,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let statsVC = StatsViewController()
         let statsNavController = UINavigationController(rootViewController: statsVC)
         statsNavController.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: NSLocalizedString("Statistics", comment: ""),
             image: UIImage(named: "stats"),
             tag: 1
         )

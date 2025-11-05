@@ -16,6 +16,10 @@
 "delete_confirmation" = "Уверены что хотите удалить трекер?";
 "cancel" = "Отменить";
 "what_to_track" = "Что будем отслеживать?";
-"no_completed" = "Нет завершённых";
-"no_uncompleted" = "Нет незавершённых";
-"no_trackers_today" = "Нет трекеров на сегодня";
+"day" = "день";
+"days" = "дня";
+"dayss" = "дней";
+"Trackers" = "Трекеры";
+"Statistics" = "Статистика";
+"Filters" = "Фильтры";
+
